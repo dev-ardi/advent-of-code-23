@@ -1,0 +1,13 @@
+[package]
+name = "advent-of-code-23"
+version = "0.1.0"
+authors = ["Grégory Obanos <gregory.obanos@gmail.com>"]
+edition = "2021"
+
+[lib]
+bench = false
+
+[dependencies]
+rust-crypto = "0.2.36"
+aoc-runner = "0.3.0"
+aoc-runner-derive = {path = "../cargo-aoc/aoc-runner-derive"}
