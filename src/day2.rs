@@ -53,7 +53,7 @@ fn part1(input: &str) -> u64 {
 
 #[aoc(day2, part2)]
 fn part2(input: &str) -> u64 {
-    let input = input.lines().enumerate().map(|(n, l)| {
+    let input = input.lines().enumerate().map(|(_n, l)| {
         l.split(';').map(|input| {
             input.split(", ").map(|str| {
                 let mut split = str.trim().split(' ');
@@ -70,7 +70,7 @@ fn part2(input: &str) -> u64 {
 
     let mut powers = 0u64;
 
-    for (game_num, game) in input.into_iter().enumerate() {
+    for (_game_num, game) in input.into_iter().enumerate() {
         let mut red_min = 0;
         let mut green_min = 0;
         let mut blue_min = 0;

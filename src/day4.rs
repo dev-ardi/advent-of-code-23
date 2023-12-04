@@ -1,6 +1,6 @@
-use std::rc::Rc;
 
-use aoc_runner_derive::{aoc, aoc_generator};
+
+use aoc_runner_derive::{aoc};
 #[aoc(day4, part1)]
 fn part1(input: &str) -> u32 {
     input
