@@ -29,29 +29,6 @@ impl From<u8> for Square {
         }
     }
 }
-impl Square {
-    fn is_empty(&self) -> bool {
-        if let Square::Empty = self {
-            true
-        } else {
-            false
-        }
-    }
-    fn is_symbol(&self) -> bool {
-        if let Square::Symbol = self {
-            true
-        } else {
-            false
-        }
-    }
-    fn is_num(&self) -> bool {
-        if let Square::Num(_) = self {
-            true
-        } else {
-            false
-        }
-    }
-}
 
 #[aoc(day3, part1)]
 fn part1(input: &[u8]) -> u32 {
@@ -72,7 +49,7 @@ fn part1(input: &[u8]) -> u32 {
         }
 
         let square: Square = input[idx as usize].into();
-        square.is_symbol()
+        matches!(square, Square::Symbol)
     };
 
     let input_iter = input
@@ -174,11 +151,7 @@ fn part2(input: &[u8]) -> u32 {
             return false;
         }
 
-        if let Square::Symbol = input[idx as usize].into() {
-            true
-        } else {
-            false
-        }
+        matches!(input[idx as usize].into(), Square::Symbol)
     };
 
     #[derive(Debug)]
