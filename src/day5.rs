@@ -1,4 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+use itertools::Itertools;
+use rayon::iter::{IntoParallelRefIterator, ParallelBridge};
 
 #[derive(Debug)]
 struct Thing {
@@ -51,8 +53,7 @@ fn part1(input: &Parsed) -> u32 {
     input
         .seeds
         .iter()
-        .copied()
-        .map(|seed| {
+        .map(|&seed| {
             input.maps.iter().fold(seed, |current, things| {
                 things
                     .iter()
@@ -68,7 +69,26 @@ fn part1(input: &Parsed) -> u32 {
 
 #[aoc(day5, part2)]
 fn part2(input: &Parsed) -> u32 {
-    todo!()
+    input
+        .seeds
+        .iter()
+        .chunks(2)
+        .into_iter()
+        .map(|mut x| (x.next().unwrap(), x.next().unwrap()))
+        .map(|(&a, &b)| (a..a + b))
+        .flatten()
+        .map(|seed| {
+            input.maps.iter().fold(seed, |current, things| {
+                things
+                    .iter()
+                    .find_map(|&Thing { to, from, range }| {
+                        (current >= from && current < from + range).then(|| to + (current - from))
+                    })
+                    .unwrap_or(current)
+            })
+        })
+        .min()
+        .unwrap()
 }
 
 #[cfg(test)]
@@ -116,12 +136,44 @@ humidity-to-location map:
         assert_eq!(part1(&input), output);
     }
 
-    // #[test]
-    // fn part2_example() {
-    //     let input = "";
-    //     let output = 0;
-    //
-    //     let input = parse(input);
-    //     assert_eq!(part2(&input), output);
-    // }
+    #[test]
+    fn part2_example() {
+        let input = "seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
+
+water-to-light map:
+88 18 7
+18 25 70
+
+light-to-temperature map:
+45 77 23
+81 45 19
+68 64 13
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+humidity-to-location map:
+60 56 37
+56 93 4";
+        let output = 46;
+
+        let input = parse(input);
+        assert_eq!(part2(&input), output);
+    }
 }
