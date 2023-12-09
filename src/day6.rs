@@ -14,8 +14,14 @@ fn part1(input: &str) -> u32 {
     let line1 = lines.next().unwrap();
     let line2 = lines.next().unwrap();
 
-    let line1 = parse_t::<f32>(line1);
-    let line2 = parse_t::<f32>(line2);
+    let line1 = line1
+        .split(' ')
+        .filter_map(|x| x.parse::<u32>().ok())
+        .map(|x| x as f32);
+    let line2 = line2
+        .split(' ')
+        .filter_map(|x| x.parse::<u32>().ok())
+        .map(|x| x as f32);
     line1
         .zip(line2)
         .map(|(time, record_distance)| {
@@ -42,7 +48,45 @@ fn part1(input: &str) -> u32 {
 
 #[aoc(day6, part2)]
 fn part2(input: &str) -> u32 {
-    todo!()
+    let mut lines = input.lines();
+    let line1 = lines.next().unwrap();
+    let line2 = lines.next().unwrap();
+
+    let time = unsafe {
+        line1
+            .chars()
+            .filter(|x| x.is_ascii_digit())
+            .collect::<String>()
+            .parse::<u64>()
+            .unwrap_unchecked() as f64
+    };
+
+    let distance = unsafe {
+        line2
+            .chars()
+            .filter(|x| x.is_ascii_digit())
+            .collect::<String>()
+            .parse::<u64>()
+            .unwrap_unchecked() as f64
+    };
+
+    let b = -time;
+    let c = distance;
+
+    let r = (b * b - 4.0 * c).sqrt();
+    let big = (-b + r) / 2.0;
+    let small = (-b - r) / 2.0;
+
+    let x = big.ceil();
+    let y = small.floor();
+
+    let res = (x - y).abs() as u32;
+
+    if x.fract() == 0.0 {
+        res - 1
+    } else {
+        res
+    }
 }
 
 #[cfg(test)]
