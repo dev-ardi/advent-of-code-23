@@ -13,3 +13,4 @@ aoc-runner = "0.3.0"
 aoc-runner-derive = {path = "../cargo-aoc/aoc-runner-derive"}
 rayon = "1.8.0"
 itertools = "0.12.0"
+utils = {path = "../aoc-utils"}

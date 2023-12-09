@@ -1,6 +1,7 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use itertools::Itertools;
-use rayon::iter::{IntoParallelRefIterator, ParallelBridge};
+use rayon::prelude::*;
+use utils::{line_vec, parse_line};
 
 #[derive(Debug)]
 struct Thing {
@@ -14,14 +15,6 @@ struct Parsed {
     maps: Vec<Vec<Thing>>,
 }
 
-fn parse_line(line: &str) -> impl Iterator<Item = u32> + '_ {
-    line.split(' ').filter_map(|x| x.parse().ok())
-}
-fn line_vec(line: &str) -> Vec<u32> {
-    parse_line(line).collect()
-}
-
-#[aoc_generator(day5)]
 fn parse(input: &str) -> Parsed {
     let mut lines = input.lines().filter(|x| !x.is_empty());
     let seeds = lines.next().unwrap().trim_start_matches("seeds: ");
@@ -49,7 +42,8 @@ fn parse(input: &str) -> Parsed {
 }
 
 #[aoc(day5, part1)]
-fn part1(input: &Parsed) -> u32 {
+fn part1(input: &str) -> u32 {
+    let input = parse(input);
     input
         .seeds
         .iter()
@@ -68,14 +62,13 @@ fn part1(input: &Parsed) -> u32 {
 }
 
 #[aoc(day5, part2)]
-fn part2(input: &Parsed) -> u32 {
+fn part2(input: &str) -> u32 {
+    let input = parse(input);
     input
         .seeds
-        .iter()
+        .into_par_iter()
         .chunks(2)
-        .into_iter()
-        .map(|mut x| (x.next().unwrap(), x.next().unwrap()))
-        .map(|(&a, &b)| (a..a + b))
+        .map(|a| (a[0]..a[0] + a[1]))
         .flatten()
         .map(|seed| {
             input.maps.iter().fold(seed, |current, things| {
@@ -132,7 +125,6 @@ humidity-to-location map:
 56 93 4";
         let output = 35;
 
-        let input = parse(input);
         assert_eq!(part1(&input), output);
     }
 
@@ -173,7 +165,6 @@ humidity-to-location map:
 56 93 4";
         let output = 46;
 
-        let input = parse(input);
         assert_eq!(part2(&input), output);
     }
 }
