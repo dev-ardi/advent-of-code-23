@@ -5,8 +5,6 @@
 //}
 
 use aoc_runner_derive::aoc;
-use itertools::Itertools;
-use utils::{parse_line, parse_t};
 
 #[aoc(day6, part1)]
 fn part1(input: &str) -> u32 {
